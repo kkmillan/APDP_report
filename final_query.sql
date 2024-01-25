@@ -65,7 +65,8 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
              d."Comments"                          as "API Remarks"        -- API Remarks
 
       from ODPO a
-               left join DPO1 b on a."DocEntry" = b."DocEntry"
+               --left join DPO1 b on a."DocEntry" = b."DocEntry"
+  			   left join (SELECT * FROM DPO1 limit 1) b on a."DocEntry" = b."DocEntry"
                inner join PCH9 c on a."DocEntry" = c."BaseAbs" --and c."ObjCode" =
                left join OPCH d on c."DocEntry" = d."DocEntry"
                left join OACT e on d."CtlAccount" = e."AcctCode"
@@ -98,7 +99,8 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
              g."Comments"                          as "API Remarks"        -- API Remarks
 
       from ODPO a
-               left join DPO1 b on a."DocEntry" = b."DocEntry"
+               --left join DPO1 b on a."DocEntry" = b."DocEntry"
+  			   left join (SELECT * FROM DPO1 limit 1) b on a."DocEntry" = b."DocEntry"
                inner join ORPC g on b."TargetType" = g."ObjType" and b."TrgetEntry" = g."DocEntry"
                left join OACT h on g."CtlAccount" = h."AcctCode") as T0
 
