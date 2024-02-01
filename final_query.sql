@@ -5,6 +5,7 @@ select T0."Vendor Code",
        T0."APDP_Doc Type",    -- Doc Type
        T0."APDP_Doc Number",
        T0."APDP_BP Ref",
+       T0."APDP GL Account",
        T0."APDP_Posting date",
        T0."APDP_Due date",
        T0."APDP_Doc date",
@@ -48,6 +49,7 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
 
              a."DocNum"                            as "APDP_Doc Number",   -- Doc Number
              a."NumAtCard"                         as "APDP_BP Ref",       -- BP Ref
+			 f."GL"								   as "APDP GL Account",   -- APDP GL_Account
              a."DocDate"                           as "APDP_Posting date", -- Posting date
              a."DocDueDate"                        as "APDP_Due date",     -- Due date
              a."TaxDate"                           as "APDP_Doc date",     -- Doc date
@@ -66,7 +68,8 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
 
       from ODPO a
                --left join DPO1 b on a."DocEntry" = b."DocEntry"
-  			   left join (SELECT * FROM DPO1 limit 1) b on a."DocEntry" = b."DocEntry"
+  			   left join (SELECT a."DocEntry", a."AcctCode", a."TargetType", a."TrgetEntry" FROM DPO1 a group by a."DocEntry", a."AcctCode", a."TargetType", a."TrgetEntry") b on a."DocEntry" = b."DocEntry"
+               left join (Select e."Segment_0" || '-' || e."Segment_1" || '-' || e."Segment_2" || '-' || e."Segment_3" || '-' || e."Segment_4" || '-' || e."Segment_5" as "GL", e."AcctCode" from OACT e) f on f."AcctCode" = b."AcctCode"
                inner join PCH9 c on a."DocEntry" = c."BaseAbs" --and c."ObjCode" =
                left join OPCH d on c."DocEntry" = d."DocEntry"
                left join OACT e on d."CtlAccount" = e."AcctCode"
@@ -82,6 +85,7 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
 
              a."DocNum"                            as "APDP_Doc Number",   -- Doc Number
              a."NumAtCard"                         as "APDP_BP Ref",       -- BP Ref
+			 f."GL"								   as "APDP GL Account",   -- APDP GL_Account
              a."DocDate"                           as "APDP_Posting date", -- Posting date
              a."DocDueDate"                        as "APDP_Due date",     -- Due date
              a."TaxDate"                           as "APDP_Doc date",     -- Doc date
@@ -100,7 +104,8 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
 
       from ODPO a
                --left join DPO1 b on a."DocEntry" = b."DocEntry"
-  			   left join (SELECT * FROM DPO1 limit 1) b on a."DocEntry" = b."DocEntry"
+  			   left join (SELECT a."DocEntry", a."AcctCode", a."TargetType", a."TrgetEntry" FROM DPO1 a group by a."DocEntry", a."AcctCode", a."TargetType", a."TrgetEntry") b on a."DocEntry" = b."DocEntry"
+               left join (Select e."Segment_0" || '-' || e."Segment_1" || '-' || e."Segment_2" || '-' || e."Segment_3" || '-' || e."Segment_4" || '-' || e."Segment_5" as "GL", e."AcctCode" from OACT e) f on f."AcctCode" = b."AcctCode"
                inner join ORPC g on b."TargetType" = g."ObjType" and b."TrgetEntry" = g."DocEntry"
                left join OACT h on g."CtlAccount" = h."AcctCode") as T0
 
