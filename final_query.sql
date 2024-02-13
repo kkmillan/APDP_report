@@ -113,6 +113,7 @@ FROM (Select a."CardCode"                          as "Vendor Code",       -- Ve
 --
 where T0."APDP_Posting date" >= '[%0]'
 AND T0."APDP_Posting date" <= '[%1]'
-AND (T0."Vendor Name" = '[%2]' or ('[%2]' = '' and '[%3]' = '' and '[%4]' = '' )) or T0."Vendor Name" = '[%3]' or T0."Vendor Name" = '[%4]'
+-- AND (T0."Vendor Name" = '[%2]' or ('[%2]' = '' and '[%3]' = '' and '[%4]' = '' )) or T0."Vendor Name" = '[%3]' or T0."Vendor Name" = '[%4]'
+AND (T0."Vendor Name" IN ('[%2]', '[%3]', '[%4]') OR ('[%2]' = '' AND '[%3]' = '' AND '[%4]' = ''))
 
 order by T0."Vendor Name"
